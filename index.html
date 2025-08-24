@@ -3,178 +3,266 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Manajemen Stok Gudang</title>
+  <title>Stok Gudang Divisi PP</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-900 text-gray-100 min-h-screen flex flex-col items-center p-6">
-  <h1 class="text-2xl font-bold mb-6">📦 Manajemen Stok Gudang</h1>
+<body class="bg-gray-100 text-gray-900">
+  <div class="container mx-auto p-6">
+    <h1 class="text-2xl font-bold text-center mb-6">📦 Stok Gudang Divisi PP</h1>
 
-  <!-- Form Input Produk -->
-  <div class="w-full max-w-xl bg-gray-800 rounded-2xl shadow-lg p-4 mb-6">
-    <h2 class="text-lg font-semibold mb-3">Kelola Produk</h2>
-    <div class="grid grid-cols-1 gap-3">
-      <input id="productName" type="text" placeholder="Nama Produk"
-             class="p-2 rounded bg-gray-700 border border-gray-600">
-      <input id="productCategory" type="text" placeholder="Kategori"
-             class="p-2 rounded bg-gray-700 border border-gray-600">
-      <input id="productAmount" type="number" placeholder="Jumlah"
-             class="p-2 rounded bg-gray-700 border border-gray-600">
-      <div class="flex gap-2">
-        <button onclick="addStock()" class="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 rounded">Tambah Stok</button>
-        <button onclick="reduceStock()" class="flex-1 bg-red-600 hover:bg-red-700 text-white py-2 rounded">Kurangi Stok</button>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Form Kelola Stok -->
+      <div class="bg-white shadow-md rounded-xl p-4">
+        <h2 class="text-xl font-semibold mb-4">Kelola Stok</h2>
+        <label class="block text-sm font-medium">Nama Produk</label>
+        <input id="productName" class="w-full border rounded-lg p-2 mb-3" placeholder="Nama produk">
+
+        <label class="block text-sm font-medium">Kategori</label>
+        <select id="productCategory" class="w-full border rounded-lg p-2 mb-3">
+          <option value="Elektronik">Elektronik</option>
+          <option value="Alat Tulis">Alat Tulis</option>
+          <option value="Logistik">Logistik</option>
+          <option value="Makanan">Makanan</option>
+        </select>
+
+        <label class="block text-sm font-medium">Jumlah</label>
+        <input id="productAmount" type="number" class="w-full border rounded-lg p-2 mb-3" placeholder="Jumlah">
+
+        <label class="block text-sm font-medium">Nama User</label>
+        <input id="userName" class="w-full border rounded-lg p-2 mb-3" placeholder="Nama anda">
+
+        <div class="flex gap-3">
+          <button onclick="addStock()" class="flex-1 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg">Tambah Stok</button>
+          <button onclick="reduceStock()" class="flex-1 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg">Kurangi Stok</button>
+        </div>
+      </div>
+
+      <!-- Daftar Produk -->
+      <div class="bg-white shadow-md rounded-xl p-4">
+        <h2 class="text-xl font-semibold mb-4">Daftar Produk</h2>
+        
+        <div class="flex gap-2 mb-3">
+          <input id="searchProduct" class="flex-1 border rounded-lg p-2" placeholder="Cari produk...">
+          <select id="filterCategory" class="border rounded-lg p-2">
+            <option value="">Semua Kategori</option>
+            <option value="Elektronik">Elektronik</option>
+            <option value="Alat Tulis">Alat Tulis</option>
+            <option value="Logistik">Logistik</option>
+            <option value="Makanan">Makanan</option>
+          </select>
+        </div>
+
+        <div class="max-h-[300px] overflow-y-scroll border rounded-lg">
+          <table class="w-full text-sm">
+            <thead class="bg-gray-200 sticky top-0">
+              <tr>
+                <th class="p-2">Produk</th>
+                <th class="p-2">Kategori</th>
+                <th class="p-2">Stok</th>
+              </tr>
+            </thead>
+            <tbody id="productList"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Riwayat -->
+    <div class="bg-white shadow-md rounded-xl p-4 mt-6">
+      <h2 class="text-xl font-semibold mb-4">Riwayat Perubahan</h2>
+
+      <div class="flex gap-2 mb-3">
+        <select id="historyFilter" class="border rounded-lg p-2">
+          <option value="7">7 Hari Terakhir</option>
+          <option value="30">30 Hari Terakhir</option>
+          <option value="all">Semua</option>
+        </select>
+        <input type="date" id="historyDate" class="border rounded-lg p-2">
+      </div>
+
+      <div class="max-h-[300px] overflow-y-scroll border rounded-lg">
+        <table class="w-full text-sm">
+          <thead class="bg-gray-200 sticky top-0">
+            <tr>
+              <th class="p-2">Tanggal</th>
+              <th class="p-2">Produk</th>
+              <th class="p-2">Aktivitas</th>
+              <th class="p-2">Jumlah</th>
+              <th class="p-2">User</th>
+            </tr>
+          </thead>
+          <tbody id="historyList"></tbody>
+        </table>
       </div>
     </div>
   </div>
 
-  <!-- Daftar Produk -->
-  <div class="w-full max-w-3xl bg-gray-800 rounded-2xl shadow-lg p-4 mb-6">
-    <h2 class="text-lg font-semibold mb-3">Daftar Produk</h2>
-    <table class="w-full text-left border-collapse">
-      <thead>
-        <tr class="bg-gray-700">
-          <th class="p-2">Produk</th>
-          <th class="p-2">Kategori</th>
-          <th class="p-2">Stok</th>
-          <th class="p-2">Aksi</th>
-        </tr>
-      </thead>
-      <tbody id="productTableBody"></tbody>
-    </table>
-  </div>
+  <!-- Firebase Script -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+    import { getFirestore, collection, addDoc, doc, setDoc, getDoc, updateDoc, increment, onSnapshot, query, orderBy } 
+      from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 
-  <!-- Riwayat Perubahan -->
-  <div class="w-full max-w-3xl bg-gray-800 rounded-2xl shadow-lg p-4">
-    <h2 class="text-lg font-semibold mb-3">Riwayat Perubahan</h2>
-    <table class="w-full text-left border-collapse">
-      <thead>
-        <tr class="bg-gray-700">
-          <th class="p-2">Waktu</th>
-          <th class="p-2">Produk</th>
-          <th class="p-2">Aktivitas</th>
-          <th class="p-2">Jumlah</th>
-        </tr>
-      </thead>
-      <tbody id="historyTableBody"></tbody>
-    </table>
-  </div>
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
 
-  <script>
-    // Ambil data dari localStorage
-    let products = JSON.parse(localStorage.getItem("products")) || [];
-    let history = JSON.parse(localStorage.getItem("history")) || [];
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-    function saveData() {
-      localStorage.setItem("products", JSON.stringify(products));
-      localStorage.setItem("history", JSON.stringify(history));
-    }
+    const productList = document.getElementById("productList");
+    const historyList = document.getElementById("historyList");
 
-    function renderProducts() {
-      const tbody = document.querySelector("#productTableBody");
-      tbody.innerHTML = "";
-      products.forEach((p, index) => {
-        tbody.innerHTML += `
-          <tr>
-            <td class="p-2">${p.name}</td>
-            <td class="p-2">${p.category}</td>
-            <td class="p-2">${p.stock}</td>
-            <td class="p-2">
-              <button onclick="deleteProduct(${index})" class="bg-red-600 hover:bg-red-700 px-2 py-1 rounded">🗑 Hapus</button>
-            </td>
-          </tr>
-        `;
-      });
-    }
-
-    function renderHistory() {
-      const tbody = document.querySelector("#historyTableBody");
-      tbody.innerHTML = "";
-      history.slice().reverse().forEach(h => {
-        tbody.innerHTML += `
-          <tr>
-            <td class="p-2">${h.time}</td>
-            <td class="p-2">${h.product}</td>
-            <td class="p-2">${h.action}</td>
-            <td class="p-2">${h.amount}</td>
-          </tr>
-        `;
-      });
-    }
-
-    function addStock() {
-      const name = document.getElementById("productName").value.trim();
-      const category = document.getElementById("productCategory").value.trim();
+    // ===== Tambah stok =====
+    window.addStock = async function() {
+      const name = document.getElementById("productName").value;
+      const category = document.getElementById("productCategory").value;
       const amount = parseInt(document.getElementById("productAmount").value);
+      const user = document.getElementById("userName").value;
 
-      if (!name || !category || !amount) {
-        alert("Isi semua field dengan benar!");
+      if (!name || !category || !amount || !user) {
+        alert("Lengkapi semua field!");
         return;
       }
 
-      let product = products.find(p => p.name.toLowerCase() === name.toLowerCase());
-      if (product) {
-        product.stock += amount;
-      } else {
-        products.push({ name, category, stock: amount });
+      try {
+        const productRef = doc(db, "products", name);
+        const productSnap = await getDoc(productRef);
+
+        if (productSnap.exists()) {
+          await updateDoc(productRef, { stock: increment(amount) });
+        } else {
+          await setDoc(productRef, { name, category, stock: amount });
+        }
+
+        await addDoc(collection(db, "history"), {
+          waktu: new Date(),
+          produk: name,
+          aktivitas: "Tambah Stok",
+          jumlah: amount,
+          oleh: user
+        });
+      } catch (err) {
+        console.error(err);
       }
+    };
 
-      history.push({
-        time: new Date().toLocaleString(),
-        product: name,
-        action: "Tambah Stok",
-        amount
-      });
-
-      saveData();
-      renderProducts();
-      renderHistory();
-    }
-
-    function reduceStock() {
-      const name = document.getElementById("productName").value.trim();
+    // ===== Kurangi stok =====
+    window.reduceStock = async function() {
+      const name = document.getElementById("productName").value;
       const amount = parseInt(document.getElementById("productAmount").value);
+      const user = document.getElementById("userName").value;
 
-      if (!name || !amount) {
-        alert("Isi semua field dengan benar!");
+      if (!name || !amount || !user) {
+        alert("Lengkapi semua field!");
         return;
       }
 
-      let product = products.find(p => p.name.toLowerCase() === name.toLowerCase());
-      if (product) {
-        product.stock = Math.max(0, product.stock - amount);
-        history.push({
-          time: new Date().toLocaleString(),
-          product: name,
-          action: "Kurangi Stok",
-          amount
-        });
-      } else {
-        alert("Produk tidak ditemukan!");
+      try {
+        const productRef = doc(db, "products", name);
+        const productSnap = await getDoc(productRef);
+
+        if (productSnap.exists()) {
+          await updateDoc(productRef, { stock: increment(-amount) });
+          await addDoc(collection(db, "history"), {
+            waktu: new Date(),
+            produk: name,
+            aktivitas: "Kurangi Stok",
+            jumlah: amount,
+            oleh: user
+          });
+        } else {
+          alert("Produk tidak ditemukan!");
+        }
+      } catch (err) {
+        console.error(err);
       }
+    };
 
-      saveData();
-      renderProducts();
-      renderHistory();
-    }
+    // ===== Realtime produk =====
+    const productQuery = query(collection(db, "products"), orderBy("name"));
+    onSnapshot(productQuery, (snapshot) => {
+      let html = "";
+      const search = document.getElementById("searchProduct").value.toLowerCase();
+      const filter = document.getElementById("filterCategory").value;
 
-    function deleteProduct(index) {
-      const deleted = products[index];
-      if (confirm(`Yakin ingin menghapus ${deleted.name}?`)) {
-        history.push({
-          time: new Date().toLocaleString(),
-          product: deleted.name,
-          action: "Hapus Produk",
-          amount: "-"
-        });
-        products.splice(index, 1);
-        saveData();
-        renderProducts();
-        renderHistory();
-      }
-    }
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        if (
+          (!search || data.name.toLowerCase().includes(search)) &&
+          (!filter || data.category === filter)
+        ) {
+          html += `<tr>
+            <td class="p-2">${data.name}</td>
+            <td class="p-2">${data.category}</td>
+            <td class="p-2">${data.stock}</td>
+          </tr>`;
+        }
+      });
+      productList.innerHTML = html;
+    });
 
-    // Render awal
-    renderProducts();
-    renderHistory();
+    // ===== Realtime riwayat =====
+    const historyQuery = query(collection(db, "history"), orderBy("waktu", "desc"));
+    onSnapshot(historyQuery, (snapshot) => {
+      let html = "";
+      const filterDays = document.getElementById("historyFilter").value;
+      const dateFilter = document.getElementById("historyDate").value;
+
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        const tanggal = new Date(data.waktu.toDate ? data.waktu.toDate() : data.waktu);
+        let tampil = true;
+
+        if (filterDays !== "all") {
+          const days = parseInt(filterDays);
+          const batas = new Date();
+          batas.setDate(batas.getDate() - days);
+          if (tanggal < batas) tampil = false;
+        }
+
+        if (dateFilter) {
+          const selected = new Date(dateFilter);
+          if (
+            tanggal.getFullYear() !== selected.getFullYear() ||
+            tanggal.getMonth() !== selected.getMonth() ||
+            tanggal.getDate() !== selected.getDate()
+          ) {
+            tampil = false;
+          }
+        }
+
+        if (tampil) {
+          html += `<tr>
+            <td class="p-2">${tanggal.toLocaleString()}</td>
+            <td class="p-2">${data.produk}</td>
+            <td class="p-2">${data.aktivitas}</td>
+            <td class="p-2">${data.jumlah}</td>
+            <td class="p-2">${data.oleh}</td>
+          </tr>`;
+        }
+      });
+      historyList.innerHTML = html;
+    });
+
+    // ===== Event listener search & filter =====
+    document.getElementById("searchProduct").addEventListener("input", () => {
+      onSnapshot(productQuery, () => {}); // trigger refresh
+    });
+    document.getElementById("filterCategory").addEventListener("change", () => {
+      onSnapshot(productQuery, () => {});
+    });
+    document.getElementById("historyFilter").addEventListener("change", () => {
+      onSnapshot(historyQuery, () => {});
+    });
+    document.getElementById("historyDate").addEventListener("change", () => {
+      onSnapshot(historyQuery, () => {});
+    });
   </script>
 </body>
 </html>
